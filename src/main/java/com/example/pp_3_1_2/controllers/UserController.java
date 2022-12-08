@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -36,7 +36,7 @@ public class UserController {
 
     @PostMapping("addUser")
     public String createUser(@ModelAttribute("user") User user) {
-        userService.addUser(user);
+        userService.saveUser(user);
         return "redirect:users";
     }
 
@@ -54,7 +54,7 @@ public class UserController {
 
     @PatchMapping("editUser")
     public String update(@ModelAttribute("user") User user) {
-        userService.updateUser(user);
+        userService.saveUser(user);
         return "redirect:users";
     }
 

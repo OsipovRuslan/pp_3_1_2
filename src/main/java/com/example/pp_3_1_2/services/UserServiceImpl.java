@@ -1,51 +1,45 @@
 package com.example.pp_3_1_2.services;
 
-import com.example.pp_3_1_2.dao.UserDao;
+import com.example.pp_3_1_2.repository.UserRepository;
 import com.example.pp_3_1_2.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService{
-    private UserDao userDao;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public List<User> getUsers() {
-        return userDao.getUsers();
+        return userRepository.findAll();
     }
 
-    @Transactional
-    @Override
-    public void addUser(User user) {
-        userDao.addUser(user);
-    }
-    @Transactional
     @Override
     public void deleteUsers() {
-        userDao.deleteUsers();
+        userRepository.deleteAll();
     }
 
     @Override
-    public User getUserById(long id) {
-        return userDao.getUserById(id);
-    }
-    @Transactional
-    @Override
-    public void updateUser(User user) {
-        userDao.updateUser(user);
+    public Optional<User> getUserById(long id) {
+        return userRepository.findById(id);
     }
 
-    @Transactional
     @Override
     public void deleteUser(long id) {
-        userDao.deleteUser(id);
+            userRepository.delete(userRepository.findById(id).get());
+    }
+
+    @Override
+    public void saveUser(User user) {
+        userRepository.saveAndFlush(user);
     }
 }
